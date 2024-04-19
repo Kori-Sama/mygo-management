@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package grpc;
+
+option go_package = "./pb";
+
+import "google/protobuf/timestamp.proto";
+
+message TransactionMessage {
+    int32 id = 1;
+    int32 user_id = 2;
+    string title = 3;
+    string description = 4;
+    int64 value = 5;
+    Status status = 6;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+
+    enum Status {
+        DRAFT = 0;
+        CENSORING = 1;
+        PASSED = 2;
+        REJECTED = 3;
+    }
+}
+
+message GetAllTransactionsRequest {}
+
+message TransactionRequest {
+    int32 id = 1;
+    Action action = 2;
+
+    enum Action {
+        GET = 0;
+        PASS = 1;
+        REJECT = 2;
+        DELETE = 3;
+    }
+}
+
+message TransactionResponse {
+   TransactionMessage transaction = 1;
+}
+
+service TransactionService {
+    rpc GetAllTransactions(GetAllTransactionsRequest) returns (stream TransactionResponse);
+    rpc HandleTransaction(TransactionRequest) returns (TransactionResponse);
+}
