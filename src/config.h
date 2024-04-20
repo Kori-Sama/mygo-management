@@ -1,9 +1,13 @@
+#pragma once
 #include <stdlib.h>
 
 struct Config {
-    int port = 80;
+    int port = 8080;
 
     void load_env() {
-        port = std::stoi(getenv("PORT"));
+        auto env_port = getenv("PORT");
+        if (env_port != NULL) {
+            port = std::stoi(env_port);
+        }
     }
 };

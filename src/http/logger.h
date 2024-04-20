@@ -1,12 +1,15 @@
+#pragma once
 #include <iostream>
 #include <string>
-
+#include "utils.h"
 void inner_log(const char* level, const char* message, const char* file_name, int line) {
-    std::cout << "[" << level << "][" << time(nullptr) << "][" << message << "][" << file_name << "][" << line << "]" << std::endl;
+    auto file = utils::split(file_name, "/").back();
+    std::cout << "[" << level << "][" << time(nullptr) << "][" << message << "][" << file << "][" << line << "]" << std::endl;
 }
 
 void inner_log(const char* level, std::string message, const char* file_name, int line) {
-    std::cout << "[" << level << "][" << time(nullptr) << "][" << message << "][" << file_name << "][" << line << "]" << std::endl;
+    auto file = utils::split(file_name, "/").back();
+    std::cout << "[" << level << "][" << time(nullptr) << "][" << message << "][" << file << "][" << line << "]" << std::endl;
 }
 
 #define INFO(message) inner_log("INFO", message, __FILE__, __LINE__)

@@ -4,22 +4,8 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <pthread.h>
-#include "logger.h"
 #include "tcp_server.h"
 
-TcpServer* TcpServer::GetInstance(int port)
-{
-    static pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
-    if (_svr == nullptr) {
-        pthread_mutex_lock(&mtx);
-        if (_svr == nullptr) {
-            _svr = new TcpServer(port);
-            _svr->InitServer();
-        }
-        pthread_mutex_unlock(&mtx);
-    }
-    return _svr;
-}
 void TcpServer::InitServer()
 {
     Socket();

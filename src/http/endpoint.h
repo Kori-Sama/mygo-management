@@ -1,26 +1,41 @@
+#pragma once
+#include<array>
 #include "http_request.h"
 #include "http_response.h"
-
 class EndPoint {
 private:
-    int _sock;                   //通信的套接字
-    HttpRequest _http_request;   //HTTP请求
-    HttpResponse _http_response; //HTTP响应
+    int _sock;
+    HttpRequest _http_request;
+    HttpResponse _http_response;
+    bool _is_stop;
+    std::string _err;
 public:
     EndPoint(int sock)
-        :_sock(sock)
+        :_sock(sock),
+        _is_stop(false),
+        _err("")
     {}
-    //读取请求
-    void recvHttpRequest();
-    //处理请求
-    void handlerHttpRequest();
-    //构建响应
-    void buildHttpResponse();
-    //发送响应
-    void sendHttpResponse();
+    void read_request();
+    void handle_request();
+    void build_response();
+    bool send_response();
+    bool is_stop() const;
+    std::string get_error() const;
+    std::array<std::string, 2> get_session_msg() const;
     ~EndPoint()
     {}
 
 private:
-    void readRequestLine();
+    void parse_request_line();
+    void parse_request_header();
+    bool read_request_line();
+    bool read_request_header();
+    bool read_request_body();
+    bool have_to_read_request_body();
+
+    // int process_cgi();
+    // int process_no_cgi();
+
+    void build_ok_response();
+    void handle_error(std::string page);
 };
