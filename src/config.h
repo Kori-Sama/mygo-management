@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 struct Config {
-    int port = 8080;
+    int port = 9090;
 
     void load_env() {
         auto env_port = getenv("PORT");

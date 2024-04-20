@@ -1,12 +1,18 @@
 #include <iostream>
 #include "config.h"
-#include "http/http_server.h"
+#include "routes.h"
+
 int main() {
     Config config;
     config.load_env();
-    HttpServer* server = new HttpServer(config.port);
-    server->init_server();
-    server->run();
+    HttpServer* app = new HttpServer(config.port);
 
-    delete server;
+    app->init_server();
+
+    app->route("GET", "/api/transactions", get_all_transactions);
+    app->route("POST", "/api/transaction", handle_transaction);
+
+    app->run();
+
+    delete app;
 }

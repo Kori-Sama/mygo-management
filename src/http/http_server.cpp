@@ -9,6 +9,8 @@
 #include "logger.h"
 #include "http_server.h"
 
+std::vector<ApiHandler*> global_handlers;
+
 void* handle_request(void* arg)
 {
     int sock = *(int*)arg;
@@ -16,10 +18,10 @@ void* handle_request(void* arg)
     auto ep = std::make_unique<EndPoint>(sock);
     ep->read_request();
     if (!ep->is_stop()) {
+        ep->register_handlers(global_handlers);
         ep->handle_request();
-        ep->build_response();
-        ep->send_response();
-    } else {
+    }
+    if (ep->is_stop()) {
         ERROR(ep->get_error());
     }
     close(sock);
@@ -56,7 +58,14 @@ void HttpServer::run()
         pthread_t tid;
         pthread_create(&tid, nullptr, handle_request, (void*)p);
         pthread_detach(tid);
+
     }
+}
+
+void HttpServer::route(std::string method, std::string url, HandleFunc handler)
+{
+    auto api_handler = new ApiHandler(method, url, handler);
+    global_handlers.push_back(api_handler);
 }
 
 void HttpServer::init_server()

@@ -17,7 +17,7 @@ struct HttpResponse {
     std::string suffix;
     HttpResponse()
         :blank(LINE_END)
-        , status_code(OK)
+        , status_code(Code::OK)
         , fd(-1)
         , size(0)
     {}

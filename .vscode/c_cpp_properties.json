@@ -1,0 +1,13 @@
+{
+    "configurations": [
+        {
+            "name": "linux",
+            "intelliSenseMode": "linux-gcc-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/home/kori/.local/include"
+            ]
+        }
+    ],
+    "version": 4
+}
