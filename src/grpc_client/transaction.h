@@ -11,6 +11,7 @@ using grpc::TransactionService;
 using grpc::TransactionResponse;
 using grpc::TransactionRequest;
 using grpc::GetAllTransactionsRequest;
+using grpc::TransactionMessage;
 
 class TransactionClient {
 public:
@@ -19,8 +20,8 @@ public:
     {}
     TransactionClient() {}
 
-    std::vector<TransactionResponse> get_all_transactions();
-    TransactionResponse handle_transaction(int id, grpc::TransactionRequest_Action action);
+    std::vector<TransactionMessage> get_all_transactions();
+    TransactionMessage handle_transaction(int id, grpc::TransactionRequest_Action action);
 private:
     std::unique_ptr<TransactionService::Stub> _stub;
 };

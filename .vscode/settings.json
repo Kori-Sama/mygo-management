@@ -80,5 +80,8 @@
         "valarray": "cpp",
         "variant": "cpp",
         "format": "cpp"
-    }
+    },
+    "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
+        "*"
+    ]
 }

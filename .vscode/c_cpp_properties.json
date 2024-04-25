@@ -1,12 +1,15 @@
 {
     "configurations": [
         {
-            "name": "linux",
-            "intelliSenseMode": "linux-gcc-x64",
+            "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
                 "/home/kori/.local/include"
-            ]
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang",
+            "intelliSenseMode": "linux-clang-x64",
+            "configurationProvider": "ms-vscode.cmake-tools"
         }
     ],
     "version": 4

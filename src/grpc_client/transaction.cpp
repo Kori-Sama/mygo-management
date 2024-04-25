@@ -1,14 +1,15 @@
 #include "transaction.h"
 
-std::vector<TransactionResponse> TransactionClient::get_all_transactions()
+std::vector<TransactionMessage> TransactionClient::get_all_transactions()
 {
     GetAllTransactionsRequest request;
     ClientContext context;
     auto reader = _stub->GetAllTransactions(&context, request);
-    std::vector<TransactionResponse> transactions;
+    std::vector<TransactionMessage> transactions;
     TransactionResponse response;
     while (reader->Read(&response)) {
-        transactions.push_back(response);
+        auto msg = response.transaction();
+        transactions.push_back(msg);
     }
 
     Status status = reader->Finish();
@@ -18,7 +19,7 @@ std::vector<TransactionResponse> TransactionClient::get_all_transactions()
     return transactions;
 }
 
-TransactionResponse TransactionClient::handle_transaction(int id, grpc::TransactionRequest_Action action)
+TransactionMessage TransactionClient::handle_transaction(int id, grpc::TransactionRequest_Action action)
 {
     ClientContext context;
 
@@ -33,5 +34,5 @@ TransactionResponse TransactionClient::handle_transaction(int id, grpc::Transact
     if (!status.ok()) {
         printf("TransactionClient::handle_transaction rpc failed\n");
     }
-    return response;
+    return response.transaction();
 }
