@@ -24,24 +24,28 @@ else()
   set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 endif()
 
-set(pb "transaction")
+set(pbs "transaction")
 
-get_filename_component(hw_proto "./protos/${pb}.proto" ABSOLUTE)
-get_filename_component(hw_proto_path "${hw_proto}" PATH)
+foreach(pb ${pbs})
+  message(STATUS "Generating ${pb}")
 
-set(hw_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.pb.cc")
-set(hw_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.pb.h")
-set(hw_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.grpc.pb.cc")
-set(hw_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.grpc.pb.h")
-add_custom_command(
-      OUTPUT "${hw_proto_srcs}" "${hw_proto_hdrs}" "${hw_grpc_srcs}" "${hw_grpc_hdrs}"
-      COMMAND ${_PROTOBUF_PROTOC}
-      ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
-        --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
-        -I "${hw_proto_path}"
-        --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
-        "${hw_proto}"
-      DEPENDS "${hw_proto}")
+  get_filename_component(hw_proto "./protos/${pb}.proto" ABSOLUTE)
+  get_filename_component(hw_proto_path "${hw_proto}" PATH)
+
+  set(hw_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.pb.cc")
+  set(hw_proto_hdrs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.pb.h")
+  set(hw_grpc_srcs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.grpc.pb.cc")
+  set(hw_grpc_hdrs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.grpc.pb.h")
+  add_custom_command(
+        OUTPUT "${hw_proto_srcs}" "${hw_proto_hdrs}" "${hw_grpc_srcs}" "${hw_grpc_hdrs}"
+        COMMAND ${_PROTOBUF_PROTOC}
+        ARGS --grpc_out "${CMAKE_CURRENT_BINARY_DIR}"
+          --cpp_out "${CMAKE_CURRENT_BINARY_DIR}"
+          -I "${hw_proto_path}"
+          --plugin=protoc-gen-grpc="${_GRPC_CPP_PLUGIN_EXECUTABLE}"
+          "${hw_proto}"
+        DEPENDS "${hw_proto}")
+endforeach()
 
 include_directories("/home/$ENV{USER}/.local/include" "${CMAKE_CURRENT_BINARY_DIR}")
 

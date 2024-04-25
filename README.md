@@ -1,5 +1,5 @@
-[中文版](https://github.com/Kori-Sama/mygo-management/blob/main/README-CN.md)
-## A Distributed HTTP Server Written in C++
+[[中文版]](https://github.com/Kori-Sama/mygo-management/blob/main/README-CN.md)
+## A Distributed HTTP Server Written in C++ 
 
 This server cannot run independently, it is a service in a distributed system, and it depends on its [main server](https://github.com/Kori-Sama/mygo).
 

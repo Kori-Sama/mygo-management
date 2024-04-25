@@ -65,9 +65,10 @@ void HttpServer::route(std::string method, std::string url, HandleFunc handler)
     global_handlers.push_back(api_handler);
 }
 
-void HttpServer::init(int port)
+void HttpServer::init(int port, std::string static_root)
 {
     _port = port;
+    set_static_root(static_root);
     signal(SIGPIPE, SIG_IGN);
 }
 

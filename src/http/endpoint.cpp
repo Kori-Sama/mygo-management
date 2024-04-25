@@ -19,8 +19,9 @@
 #define PAGE_404 "404.html"
 #define PAGE_500 "500.html"
 
-#define WEB_ROOT "dist"
 #define HOME_PAGE "index.html"
+
+std::string static_root = "www";
 
 void EndPoint::read_request()
 {
@@ -65,7 +66,7 @@ void EndPoint::handle_static_request()
     }
 
     std::string path = _http_request.path;
-    _http_request.path = WEB_ROOT;
+    _http_request.path = static_root;
     _http_request.path += path;
 
     if (_http_request.path[_http_request.path.size() - 1] == '/') {
@@ -185,7 +186,7 @@ void EndPoint::build_static_response()
     status_line += utils::code_to_desc(code);
     status_line += LINE_END;
 
-    std::string path = WEB_ROOT;
+    std::string path = static_root;
     path += "/";
     std::string content_type = "Content-Type: ";
     switch (code) {
@@ -375,4 +376,9 @@ void EndPoint::handle_error(std::string page)
 
         _http_response.size = st.st_size;
     }
+}
+
+void set_static_root(std::string root)
+{
+    static_root = root;
 }

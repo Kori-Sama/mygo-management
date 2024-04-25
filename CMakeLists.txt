@@ -1,8 +1,16 @@
 cmake_minimum_required(VERSION 3.28)
 
-project(mygo-management)
+project(mygo-management C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
+
+if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
+    add_definitions(-DIS_LINUX)
+    message(STATUS "Configuring on Linux")
+else()
+    message(STATUS "This project is only supported on Linux systems") 
+    return()
+endif()
 
 set(TARGET app)
 set(EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_SOURCE_DIR}/bin)

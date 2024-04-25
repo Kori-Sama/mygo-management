@@ -60,9 +60,8 @@ private:
     bool read_request_body();
     bool have_to_read_request_body();
 
-    // int process_cgi();
-    // int process_no_cgi();
-
     void build_ok_response();
     void handle_error(std::string page);
 };
+
+void set_static_root(std::string root);
