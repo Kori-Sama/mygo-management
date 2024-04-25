@@ -8,13 +8,12 @@
 #include <signal.h>
 #include "logger.h"
 #include "http_server.h"
+#include "thread_pool.h"
 
 std::vector<ApiHandler*> global_handlers;
 
-void* handle_request(void* arg)
+void* handle_request(int sock)
 {
-    int sock = *(int*)arg;
-
     auto ep = std::make_unique<EndPoint>(sock);
     ep->read_request();
     if (!ep->is_stop()) {
@@ -54,11 +53,9 @@ void HttpServer::run()
         int client_port = ntohs(peer.sin_port);
         INFO("Get a new connection: [" + client_ip + ":" + std::to_string(client_port) + "]");
 
-        int* p = new int(sock);
-        pthread_t tid;
-        pthread_create(&tid, nullptr, handle_request, (void*)p);
-        pthread_detach(tid);
-
+        ThreadPool::instance().add_task(std::bind(handle_request, sock));
+        int idle = ThreadPool::instance().idle_thread_num();
+        INFO("Idle thread num: " + std::to_string(idle));
     }
 }
 

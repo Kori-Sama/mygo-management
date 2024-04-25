@@ -8,8 +8,10 @@ set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
 include(${THIRD_PARTY_DIR}/gRPC/common.cmake)
   
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
-
 include_directories(${THIRD_PARTY_DIR}/cJSON)
+
+include_directories(${SRC_DIR}/thread_pool)
+
 add_subdirectory(${THIRD_PARTY_DIR}/cJSON)
 
 add_subdirectory(${SRC_DIR})

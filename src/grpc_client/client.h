@@ -17,7 +17,6 @@ public:
         static GrpcClient instance;
         return instance;
     }
-
 private:
     TransactionClient _transaction_client;
 
@@ -29,12 +28,7 @@ private:
         std::string address = std::string("localhost:") + std::string(port);
         _transaction_client = TransactionClient(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()));
     }
-};
 
-// GrpcClient* grpc_instance() {
-//     static GrpcClient* instance;
-//     if (instance == nullptr) {
-//         instance = new GrpcClient();
-//     }
-//     return instance;
-// }
+    GrpcClient(const GrpcClient&) = delete;
+    GrpcClient& operator=(const GrpcClient&) = delete;
+};
