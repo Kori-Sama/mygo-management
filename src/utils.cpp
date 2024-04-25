@@ -28,7 +28,7 @@ cJSON* _stringify_transaction(const TransactionMessage& data) {
 }
 
 
-std::string stringify_transaction(std::vector<TransactionMessage> transactions)
+std::string stringify_transaction(const std::vector<TransactionMessage> transactions)
 {
     cJSON* root = _stringify_transaction(transactions);
     std::string json_string = cJSON_Print(root);
@@ -36,7 +36,7 @@ std::string stringify_transaction(std::vector<TransactionMessage> transactions)
     return json_string;
 }
 
-std::string stringify_transaction(TransactionMessage transaction)
+std::string stringify_transaction(const TransactionMessage transaction)
 {
     cJSON* root = _stringify_transaction(transaction);
     std::string json_string = cJSON_Print(root);

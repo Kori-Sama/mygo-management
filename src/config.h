@@ -1,5 +1,6 @@
 #pragma once
 #include <stdlib.h>
+#include <bits/basic_string.h>
 
 struct Config {
     int port = 9090;
