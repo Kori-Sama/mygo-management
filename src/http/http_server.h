@@ -7,11 +7,9 @@ class HttpServer {
 private:
     int _port;
 public:
-    HttpServer(int port)
-        :_port(port)
+    HttpServer()
     {}
     void run();
-    void init_server();
+    void init(int port = 9090);
     void route(std::string method, std::string url, HandleFunc handler);
-
 };

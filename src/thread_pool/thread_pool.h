@@ -13,19 +13,22 @@ class ThreadPool {
 private:
     std::mutex               _cv_mt;
     std::condition_variable  _cv_lock;
-    std::atomic_bool         _stop;
+    std::atomic_bool         _is_stop;
     std::atomic_int          _thread_num;
     std::queue<Task>         _tasks;
     std::vector<std::thread> _pool;
 public:
     static ThreadPool& instance();
+
+    void init(int num = std::thread::hardware_concurrency());
+
     void add_task(Task&& task);
 
     int idle_thread_num();
 
     ~ThreadPool();
 private:
-    ThreadPool(unsigned int num = std::thread::hardware_concurrency());
+    ThreadPool() :_is_stop(false) {};
 
     void start();
     void stop();

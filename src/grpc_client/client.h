@@ -4,7 +4,15 @@
 
 
 class GrpcClient {
+private:
+    std::string _port;
 public:
+    void init(int port = 50051) {
+        _port = std::to_string(port);
+        auto channel = grpc::CreateChannel("localhost:" + _port, grpc::InsecureChannelCredentials());
+        _transaction_client = TransactionClient(channel);
+    }
+
     std::vector<TransactionMessage> get_all_transactions() {
         return _transaction_client.get_all_transactions();
     }
@@ -20,15 +28,7 @@ public:
 private:
     TransactionClient _transaction_client;
 
-    GrpcClient() {
-        const char* port = getenv("GRPC_PORT");
-        if (port == NULL) {
-            port = "50051";
-        }
-        std::string address = std::string("localhost:") + std::string(port);
-        _transaction_client = TransactionClient(grpc::CreateChannel(address, grpc::InsecureChannelCredentials()));
-    }
-
+    GrpcClient() {}
     GrpcClient(const GrpcClient&) = delete;
     GrpcClient& operator=(const GrpcClient&) = delete;
 };

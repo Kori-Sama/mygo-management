@@ -1,2 +1,5 @@
+bin
 build
-grpc/*
+third_party/gRPC/bin
+third_party/gRPC/include
+third_party/gRPC/lib

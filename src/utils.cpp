@@ -42,16 +42,13 @@ std::string stringify_transaction(const TransactionMessage transaction) {
     return json_string;
 }
 
+std::unordered_map<std::string, grpc::TransactionRequest_Action> action_map = {
+    {"get", grpc::TransactionRequest_Action::TransactionRequest_Action_GET},
+    {"pass", grpc::TransactionRequest_Action::TransactionRequest_Action_PASS},
+    {"reject", grpc::TransactionRequest_Action::TransactionRequest_Action_REJECT},
+    {"delete", grpc::TransactionRequest_Action::TransactionRequest_Action_DELETE}
+};
+
 grpc::TransactionRequest_Action get_action(std::string action) {
-    if (action == "get") {
-        return grpc::TransactionRequest_Action::TransactionRequest_Action_GET;
-    } else if (action == "pass") {
-        return grpc::TransactionRequest_Action::TransactionRequest_Action_PASS;
-    } else if (action == "reject") {
-        return grpc::TransactionRequest_Action::TransactionRequest_Action_REJECT;
-    } else if (action == "delete") {
-        return grpc::TransactionRequest_Action::TransactionRequest_Action_DELETE;
-    } else {
-        return grpc::TransactionRequest_Action::TransactionRequest_Action_GET;
-    }
+    return action_map[action];
 }

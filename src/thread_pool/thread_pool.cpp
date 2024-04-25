@@ -1,17 +1,5 @@
 #include "thread_pool.h"
 
-
-ThreadPool::ThreadPool(unsigned int num)
-    : _stop(false) {
-        {
-            if (num <= 1)
-                _thread_num = 2;
-            else
-                _thread_num = num;
-        }
-        start();
-}
-
 ThreadPool::~ThreadPool() {
     stop();
 }
@@ -19,6 +7,16 @@ ThreadPool::~ThreadPool() {
 ThreadPool& ThreadPool::instance() {
     static ThreadPool instance;
     return instance;
+}
+
+void ThreadPool::init(int num) {
+    {
+        if (num <= 1)
+            _thread_num = 2;
+        else
+            _thread_num = num;
+    }
+    start();
 }
 
 void ThreadPool::add_task(Task&& task) {
@@ -36,12 +34,12 @@ int ThreadPool::idle_thread_num() {
 void ThreadPool::start() {
     for (int i = 0; i < _thread_num; ++i) {
         _pool.emplace_back([this]() {
-            while (!this->_stop.load()) {
+            while (!this->_is_stop.load()) {
                 Task task;
                 {
                     std::unique_lock<std::mutex> cv_mt(_cv_mt);
                     this->_cv_lock.wait(cv_mt, [this] {
-                        return this->_stop.load() || !this->_tasks.empty();
+                        return this->_is_stop.load() || !this->_tasks.empty();
                         });
                     if (this->_tasks.empty())
                         return;
@@ -58,7 +56,7 @@ void ThreadPool::start() {
 }
 
 void ThreadPool::stop() {
-    _stop.store(true);
+    _is_stop.store(true);
     _cv_lock.notify_all();
     for (auto& td : _pool) {
         if (td.joinable()) {
