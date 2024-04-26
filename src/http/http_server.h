@@ -1,15 +1,30 @@
-#pragma once
-#include "tcp_server.h"
-#include "endpoint.h"
+#ifndef __HTTP_SERVER_H
+#define __HTTP_SERVER_H
 
+#include <string>
 
-class HttpServer {
-private:
-    int _port;
-public:
-    HttpServer()
-    {}
-    void run();
-    void init(int port = 9090, std::string static_root = "www");
-    void route(std::string method, std::string url, HandleFunc handler);
-};
+namespace http {
+    class HttpServer {
+    public:
+        static HttpServer& instance();
+
+        void init(int port = 9090);
+
+        void run();
+
+        // void route(std::string method, std::string url, HandleFunc handler);
+
+        void use_static(const std::string& path);
+
+    private:
+        HttpServer()
+        {}
+
+        HttpServer(const HttpServer&) = delete;
+        HttpServer& operator=(const HttpServer&) = delete;
+
+        int _port;
+    };
+}
+
+#endif // __HTTP_SERVER_H

@@ -4,14 +4,14 @@ project(mygo-management C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-enable_testing()
+option(ONLY_TEST "Only build test" OFF)
 
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
-    add_definitions(-DIS_LINUX)
-    message(STATUS "Configuring on Linux")
+add_definitions(-DIS_LINUX)
+message(STATUS "Configuring on Linux")
 else()
-    message(STATUS "This project is only supported on Linux systems") 
-    return()
+message(STATUS "This project is only supported on Linux systems") 
+return()
 endif()
 
 set(TARGET app)
@@ -28,11 +28,20 @@ set(CMAKE_DEBUG_POSTFIX "_d")
 
 
 include(${PROJECT_ROOT}/cmake/common.cmake)
-  
+
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories(${THIRD_PARTY_DIR}/cJSON)
 include_directories(${SRC_DIR}/thread_pool)
 
+if(ONLY_TEST)
+    enable_testing()
+    add_subdirectory(tests)
+    return()
+endif()
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    enable_testing()
+    add_subdirectory(tests)
+endif()
+
 add_subdirectory(${THIRD_PARTY_DIR}/cJSON)
 add_subdirectory(${SRC_DIR})
-add_subdirectory(tests)

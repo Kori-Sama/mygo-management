@@ -4,7 +4,8 @@
             "name": "Linux",
             "includePath": [
                 "${workspaceFolder}/**",
-                "/home/kori/.local/include"
+                "/home/kori/.local/include",
+                "${workspaceFolder}/src/utils"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",
