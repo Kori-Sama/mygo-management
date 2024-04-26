@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.13)
 project(test)
 
 set(GOOGLETEST_VERSION 1.14.0)
+
+set(EXECUTABLE_OUTPUT_PATH ${PROJECT_ROOT}/bin/tests)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${PROJECT_ROOT}/bin/tests)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${PROJECT_ROOT}/bin/tests)
+
 add_subdirectory(${THIRD_PARTY_DIR}/googletest googletest)
 
 add_executable(test_http ${CMAKE_CURRENT_SOURCE_DIR}/test_http.cpp)
