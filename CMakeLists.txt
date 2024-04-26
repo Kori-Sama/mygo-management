@@ -4,8 +4,6 @@ project(mygo-management C CXX)
 
 set(CMAKE_CXX_STANDARD 17)
 
-option(ONLY_TEST "Only build test" OFF)
-
 if (CMAKE_SYSTEM_NAME STREQUAL "Linux")
 add_definitions(-DIS_LINUX)
 message(STATUS "Configuring on Linux")
@@ -33,11 +31,6 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 include_directories(${THIRD_PARTY_DIR}/cJSON)
 include_directories(${SRC_DIR}/thread_pool)
 
-if(ONLY_TEST)
-    enable_testing()
-    add_subdirectory(tests)
-    return()
-endif()
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
     enable_testing()
     add_subdirectory(tests)

@@ -1,5 +1,7 @@
 aux_source_directory(. DIR_SRCS)
 
+add_subdirectory(./logger)
+add_subdirectory(./utils)
 add_subdirectory(./thread_pool)
 add_subdirectory(./http)
 add_subdirectory(./grpc_client)

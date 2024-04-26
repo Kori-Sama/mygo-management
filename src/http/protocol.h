@@ -7,7 +7,7 @@
 
 #include "context.h"
 
-#define HTTP_VERSION "HTTP/1.0"
+#define HTTP_VERSION "HTTP/1.1"
 
 namespace http {
     constexpr char LINE_END[] = "\r\n";
@@ -37,7 +37,7 @@ namespace http {
         std::string path;
         std::string query_string;
 
-        static HttpRequest& parser(const std::string& request_str);
+        static HttpRequest parse(const std::string& request_str);
 
         HttpRequest()
             :content_length(0)
@@ -55,9 +55,9 @@ namespace http {
         std::string body;
         int status_code;
 
-        static HttpResponse& build(int status_code, std::map<std::string, std::string> header, const std::string& body);
+        static HttpResponse build(int status_code, std::map<std::string, std::string> header, const std::string& body);
 
-        std::map<std::string, std::string>& header_kv();
+        // std::unordered_map<std::string, std::string>& header_kv();
 
         HttpResponse()
             :blank(LINE_END)

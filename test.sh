@@ -1,6 +1,11 @@
 #!/bin/bash
 
-# Specify the directory to traverse
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Debug
+make -j4
+cd ..
+
 dir_path="bin/tests"
 
 if [ ! -d "$dir_path" ]; then
@@ -13,6 +18,7 @@ for file in "$dir_path"/*; do
         echo "--------------- Executing: $file ---------------"
         "$file"
         echo "--------------- Executed: $file  ---------------"
+        echo ""
     fi
 done
 
