@@ -14,6 +14,12 @@ void logger_middleware(Context& ctx) {
     std::cout << "[" << ctx.req.method << "]       " << ctx.req.url << "          " << ctx.req.ip << ":" << ctx.req.port << std::endl;
 }
 
+void cors_middleware(Context& ctx) {
+    ctx.header("Access-Control-Allow-Origin", "*")
+        .header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
+        .header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+}
+
 HandleFunc make_jwt_middleware(std::vector<std::string>&& exclude_urls) {
     return [exclude_urls](Context& ctx) {
         for (auto& url : exclude_urls) {

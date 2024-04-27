@@ -20,8 +20,10 @@ int main() {
 
 
     app->middleware(logger_middleware);
+    app->middleware(cors_middleware);
     // auto jwt_auth = make_jwt_middleware({ "/login" });
     // app->middleware(jwt_auth);
+
 
     app->use_static("www");
 
