@@ -36,4 +36,12 @@ namespace utils {
         return str.substr(start, end - start);
     }
 
+    bool starts_with(const std::string& str, const std::string& prefix) {
+        if (str.size() < prefix.size()) {
+            return false;
+        }
+
+        return str.compare(0, prefix.size(), prefix) == 0;
+    }
+
 } // namespace utils

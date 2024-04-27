@@ -18,11 +18,16 @@ int main() {
 
     auto app = std::make_unique<KoriHttp>();
 
-    app->use(middleware1);
+
+    auto jwt_auth = make_jwt_middleware({ "/login" });
+    app->middleware(logger_middleware);
+    app->middleware(jwt_auth);
 
     app->route("GET", "/api/transactions", get_all_transactions);
     app->route("GET", "/hello", hello);
-    // app->route("POST", "/api/transaction", handle_transaction);
+    app->route("GET", "/login", [](Context& ctx) {
+        ctx.code(HttpCode::OK).send("Login");
+        });
 
     app->run(config.port);
 }

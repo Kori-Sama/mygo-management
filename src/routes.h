@@ -34,7 +34,7 @@ void get_all_transactions(Context& ctx) {
 
 void hello(Context& ctx) {
     auto name = ctx.query("name");
-    ctx.code(HttpCode::OK).html(std::string("</h1>Hello " + name + "</h1>").c_str());
+    // ctx.code(HttpCode::OK).html(std::string("</h1>Hello " + name + "</h1>").c_str());
 }
 
 #endif // __ROUTES_H

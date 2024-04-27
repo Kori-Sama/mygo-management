@@ -12,14 +12,21 @@ namespace http {
             _sock(sock)
         {}
 
+        Endpoint(int sock, const std::string& ip, int port) :
+            _sock(sock), _ip(ip), _port(port)
+        {}
+
         void handle();
     private:
+        void handle_static();
         void send_response();
         void build_error_response(HttpCode code);
 
         HttpRequest _request;
         HttpResponse _response;
         int _sock;
+        std::string _ip;
+        int _port;
     };
 }
 

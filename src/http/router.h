@@ -21,6 +21,10 @@ namespace http {
             return router;
         }
 
+        void register_static(const std::string& path) {
+            _static_paths = path;
+        }
+
         void register_router(const std::string& method, const std::string& url, HandleFunc handler) {
             _routers.push_back({ method, url, handler });
         }
@@ -47,11 +51,16 @@ namespace http {
             }
         }
 
+        bool route_static(Context& ctx) {
+
+        }
+
     private:
         Router() {}
         Router(const Router&) = delete;
         Router& operator=(const Router&) = delete;
 
+        std::string _static_paths;
         std::vector<RouterInfo> _routers;
         std::vector<HandleFunc> _middlewares;
     };

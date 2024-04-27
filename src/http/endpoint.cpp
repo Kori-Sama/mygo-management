@@ -20,8 +20,15 @@ namespace http {
         }
 
         Context ctx(_request, _response);
+        ctx.req.ip = _ip;
+        ctx.req.port = _port;
         Router::instance().pass_middleware(ctx);
         if (ctx.is_block()) {
+            send_response();
+            return;
+        }
+
+        if (Router::instance().route_static(ctx)) {
             send_response();
             return;
         }
@@ -32,6 +39,10 @@ namespace http {
         } else {
             build_error_response(_response.status_code);
         }
+    }
+
+    void Endpoint::handle_static() {
+
     }
 
     void Endpoint::send_response() {

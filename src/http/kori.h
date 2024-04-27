@@ -13,7 +13,9 @@ namespace http {
 
         void use_static(const std::string& path);
 
-        void use(HandleFunc middleware);
+        void middleware(HandleFunc middleware);
+    private:
+        void print_logo();
     };
 
 }

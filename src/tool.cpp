@@ -42,6 +42,18 @@ std::string stringify_transaction(const TransactionMessage transaction) {
     return json_string;
 }
 
+std::unordered_map<std::string, std::string> json_object_to_map(const char* json) {
+    std::unordered_map<std::string, std::string> map;
+    cJSON* root = cJSON_Parse(json);
+    cJSON* item = root->child;
+    while (item) {
+        map[item->string] = item->valuestring;
+        item = item->next;
+    }
+    cJSON_Delete(root);
+    return map;
+}
+
 std::unordered_map<std::string, grpc::TransactionRequest_Action> action_map = {
     {"get", grpc::TransactionRequest_Action::TransactionRequest_Action_GET},
     {"pass", grpc::TransactionRequest_Action::TransactionRequest_Action_PASS},

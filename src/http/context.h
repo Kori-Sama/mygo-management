@@ -7,9 +7,11 @@ namespace http {
     class Context {
         struct Request {
             std::string method;
-            std::string uri;
+            std::string url;
             std::string body;
             std::unordered_map<std::string, std::string> header;
+            std::string ip;
+            int port;
         };
     public:
         Context(HttpRequest& request, HttpResponse& response) :
@@ -18,7 +20,7 @@ namespace http {
             _is_block(false)
         {
             req.method = request.method;
-            req.uri = request.uri;
+            req.url = request.uri;
             req.body = request.body;
             req.header = request.header_kv;
         }
@@ -68,6 +70,11 @@ namespace http {
         void html(const char* body) {
             _response.body = body;
             _response.header_kv["Content-Type"] = "text/html";
+        }
+
+        void redirect(const char* url) {
+            _response.status_code = HttpCode::FOUND;
+            _response.header_kv["Location"] = url;
         }
 
         /**

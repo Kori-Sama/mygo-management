@@ -9,7 +9,7 @@ namespace utils {
 
     std::string trim(const std::string& str);
 
-
+    bool starts_with(const std::string& str, const std::string& prefix);
 } // namespace utils
 
 #endif // __STRING_UTILS_H
