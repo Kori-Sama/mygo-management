@@ -12,7 +12,7 @@ namespace http {
             _sock(sock)
         {}
 
-        Endpoint(int sock, const std::string& ip, int port) :
+        Endpoint(int sock, const std::string_view ip, int port) :
             _sock(sock), _ip(ip), _port(port)
         {}
 

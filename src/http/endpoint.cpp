@@ -54,38 +54,6 @@ namespace http {
     }
 
     bool Endpoint::handle_static(std::string path) {
-        // struct stat st;
-        // std::string p = path;
-        // if (stat(p.c_str(), &st) == 0) {
-        //     if (S_ISDIR(st.st_mode)) {
-        //         p += DEFAULT_PAGE;
-        //         stat(p.c_str(), &st);
-        //     }
-        // } else {
-        //     auto pos = p.rfind("/");
-        //     p = p.substr(0, pos) + DEFAULT_PAGE;
-        //     printf("%s\n", p.c_str());
-        //     if (stat(p.c_str(), &st) != 0) {
-        //         return false;
-        //     }
-        // }
-        // auto size = st.st_size;
-        // printf("size: %ld\n", size);
-        // _response.status_code = HttpCode::OK;
-        // auto pos = p.rfind(".");
-        // auto suffix = p.substr(pos);
-        // _response.header_kv["Content-Type"] = suffix_to_desc(suffix);
-        // _response.header_kv["Content-Length"] = std::to_string(size);
-        // _response.build();
-        // std::string response_str = _response.to_string_without_body();
-        // printf("response: %s\n", response_str.c_str());
-        // if (write_all(_sock, response_str) <= 0) {
-        // }
-        // if (send_file(_sock, p, size) <= 0) {
-
-        // }
-        // return true;
-
         long size = 0;
         int type = get_path_info(path, size);
         if (type == -1) {
@@ -95,10 +63,6 @@ namespace http {
             }
             path = path.substr(0, pos) + DEFAULT_PAGE;
             return handle_static(path);
-            // type = get_path_info(path, size);
-            // if (type != 1) {
-            //     return false;
-            // }
         } else if (type == 0) {
             return handle_static(path + DEFAULT_PAGE);
         }
