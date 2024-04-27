@@ -13,15 +13,17 @@ using grpc::TransactionRequest;
 using grpc::GetAllTransactionsRequest;
 using grpc::TransactionMessage;
 
-class TransactionClient {
-public:
-    TransactionClient(std::shared_ptr<Channel> channel)
-        :_stub(TransactionService::NewStub(channel))
-    {}
-    TransactionClient() {}
+namespace grpc_client {
+    class TransactionClient {
+    public:
+        TransactionClient(std::shared_ptr<Channel> channel)
+            :_stub(TransactionService::NewStub(channel))
+        {}
+        TransactionClient() {}
 
-    std::vector<TransactionMessage> get_all_transactions();
-    TransactionMessage handle_transaction(int id, grpc::TransactionRequest_Action action);
-private:
-    std::unique_ptr<TransactionService::Stub> _stub;
-};
+        std::vector<TransactionMessage> get_all_transactions();
+        TransactionMessage handle_transaction(int id, grpc::TransactionRequest_Action action);
+    private:
+        std::unique_ptr<TransactionService::Stub> _stub;
+    };
+}

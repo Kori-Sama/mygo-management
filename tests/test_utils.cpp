@@ -36,3 +36,9 @@ TEST(StringUtilsTest, TestTrim) {
     std::string result = utils::trim(str);
     EXPECT_EQ(result, "hello world");
 }
+
+TEST(StringUtilsTest, TestTrim_NoNeedTrim) {
+    std::string str = "hello world";
+    std::string result = utils::trim(str);
+    EXPECT_EQ(result, "hello world");
+}

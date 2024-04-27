@@ -5,16 +5,11 @@
 #include <map>
 #include <string>
 
-#include "context.h"
-
 #define HTTP_VERSION "HTTP/1.1"
+#define LINE_END "\r\n"
 
 namespace http {
-    constexpr char LINE_END[] = "\r\n";
-
-    typedef std::function<void(Context&)> HandleFunc;
-
-    enum Code {
+    enum HttpCode {
         OK = 200,
         BAD_REQUEST = 400,
         NOT_FOUND = 404,
@@ -36,13 +31,13 @@ namespace http {
         int content_length;
         std::string path;
         std::string query_string;
+        std::unordered_map<std::string, std::string> query_kv;
 
-        static HttpRequest parse(const std::string& request_str);
+        bool parse(const std::string& request_str);
 
         HttpRequest()
-            :content_length(0)
+            :content_length(0) {};
 
-        {}
         ~HttpRequest()
         {}
     };
@@ -53,16 +48,20 @@ namespace http {
         std::string header;
         std::string blank;
         std::string body;
-        int status_code;
+        HttpCode status_code;
+        std::unordered_map<std::string, std::string> header_kv;
 
-        static HttpResponse build(int status_code, std::map<std::string, std::string> header, const std::string& body);
+        void build();
 
-        // std::unordered_map<std::string, std::string>& header_kv();
+        void set_header(const char* key, const char* value);
+
+        std::string to_string();
 
         HttpResponse()
             :blank(LINE_END)
-            , status_code(Code::OK)
+            , status_code(HttpCode::OK)
         {}
+
         ~HttpResponse()
         {}
     };

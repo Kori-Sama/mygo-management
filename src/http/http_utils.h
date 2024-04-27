@@ -5,7 +5,9 @@
 #include <vector>
 
 namespace http {
-    int read_line(int sock, std::string& out);
+    int read_all(int sock, std::string& out);
+    int write_all(int sock, const std::string& data);
+
     std::string code_to_desc(int code);
     std::string suffix_to_desc(const std::string& suffix);
 }

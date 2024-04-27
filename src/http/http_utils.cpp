@@ -1,24 +1,19 @@
 #include<sys/socket.h>
 #include <unordered_map>
-#include "utils.h"
+#include "http_utils.h"
+
+#define BUF_SIZE 1024
 
 namespace http {
-    int read_line(int sock, std::string& out)
-    {
-        char ch = 'X';
-        while (ch != '\n') {
-            ssize_t size = recv(sock, &ch, 1, 0);
+    int read_all(int sock, std::string& out) {
+        char buf[BUF_SIZE];
+        while (true) {
+            ssize_t size = recv(sock, buf, sizeof(buf), 0);
             if (size > 0) {
-                if (ch == '\r') {
-                    recv(sock, &ch, 1, MSG_PEEK);
-
-                    if (ch == '\n') {
-                        recv(sock, &ch, 1, 0);
-                    } else {
-                        ch = '\n';
-                    }
+                out.append(buf, size);
+                if (size < BUF_SIZE) {
+                    break;
                 }
-                out.push_back(ch);
             } else if (size == 0) {
                 return 0;
             } else {
@@ -26,6 +21,19 @@ namespace http {
             }
         }
         return out.size();
+    }
+
+    int write_all(int sock, const std::string& data) {
+        size_t size = data.size();
+        size_t pos = 0;
+        while (pos < size) {
+            ssize_t ret = send(sock, data.c_str() + pos, size - pos, 0);
+            if (ret < 0) {
+                return -1;
+            }
+            pos += ret;
+        }
+        return 0;
     }
 
     std::string code_to_desc(int code) {

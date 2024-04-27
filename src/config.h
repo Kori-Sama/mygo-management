@@ -1,4 +1,6 @@
-#pragma once
+#ifndef __CONFIG_H
+#define __CONFIG_H
+
 #include <stdlib.h>
 #include <bits/basic_string.h>
 
@@ -24,3 +26,5 @@ struct Config {
             static_root = env_www_root;
     }
 };
+
+#endif // __CONFIG_H
