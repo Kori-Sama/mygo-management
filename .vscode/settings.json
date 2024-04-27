@@ -83,5 +83,8 @@
     },
     "C_Cpp.codeAnalysis.clangTidy.checks.disabled": [
         "*"
+    ],
+    "cSpell.words": [
+        "KORI"
     ]
 }

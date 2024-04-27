@@ -41,6 +41,9 @@ namespace http {
         void pass_middleware(Context& ctx) {
             for (auto& middleware : _middlewares) {
                 middleware(ctx);
+                if (ctx.is_block()) {
+                    return;
+                }
             }
         }
 

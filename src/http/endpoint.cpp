@@ -20,9 +20,12 @@ namespace http {
         }
 
         Context ctx(_request, _response);
+        Router::instance().pass_middleware(ctx);
+        if (ctx.is_block()) {
+            send_response();
+            return;
+        }
         handleFunc(ctx);
-
-
 
         if (_response.status_code == HttpCode::OK) {
             send_response();

@@ -20,6 +20,11 @@ namespace http {
         close(sock);
     }
 
+    HttpServer& HttpServer::instance() {
+        static HttpServer server;
+        return server;
+    }
+
     void HttpServer::init(int port) {
         _port = port;
         signal(SIGPIPE, SIG_IGN);
@@ -51,14 +56,15 @@ namespace http {
         }
     }
 
-    void HttpServer::route(std::string method, std::string url, HandleFunc handler) {
-        Router::instance().register_router(method, url, handler);
-    }
+    // void HttpServer::route(std::string method, std::string url, HandleFunc handler) {
+    //     Router::instance().register_router(method, url, handler);
+    // }
 
-    void HttpServer::use_static(const std::string& path) {
-    }
+    // void HttpServer::use_static(const std::string& path) {
+    // }
 
-    void HttpServer::use(HandleFunc middleware) {
-    }
+    // void HttpServer::use(HandleFunc middleware) {
+    //     Router::instance().register_middleware(middleware);
+    // }
 
 }
