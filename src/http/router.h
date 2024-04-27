@@ -6,6 +6,8 @@
 #include <vector>
 #include "context.h"
 
+#define DEFAULT_PAGE "/index.html"
+
 namespace http {
 
     struct RouterInfo {
@@ -51,8 +53,18 @@ namespace http {
             }
         }
 
-        bool route_static(Context& ctx) {
+        std::string route_static(Context& ctx) {
+            if (_static_paths.empty()) {
+                return "";
+            }
 
+            if (ctx.req.url == "/") {
+                ctx.req.url = DEFAULT_PAGE;
+            } else if (ctx.req.url.rfind('.') == std::string::npos) {
+                ctx.req.url += ".html";
+            }
+
+            return _static_paths + ctx.req.url;
         }
 
     private:

@@ -59,6 +59,7 @@ namespace http {
         void set_header(const char* key, const char* value);
 
         std::string to_string();
+        std::string to_string_without_body();
 
         HttpResponse()
             :blank(LINE_END)

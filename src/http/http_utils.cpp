@@ -1,6 +1,9 @@
 #include<sys/socket.h>
+#include<sys/stat.h>
+#include<sys/sendfile.h>
 #include <unordered_map>
 #include "http_utils.h"
+
 
 #define BUF_SIZE 1024
 
@@ -33,7 +36,60 @@ namespace http {
             }
             pos += ret;
         }
-        return 0;
+        return 1;
+    }
+
+    char* read_file(const std::string& path) {
+        FILE* fp = fopen(path.c_str(), "rb");
+        if (fp == nullptr) {
+            return nullptr;
+        }
+
+        fseek(fp, 0, SEEK_END);
+        long size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        char* buffer = new char[size + 1];
+        fread(buffer, 1, size, fp);
+        buffer[size] = '\0';
+
+        fclose(fp);
+        return buffer;
+    }
+
+    bool is_dir(const std::string& path) {
+        struct stat st;
+        if (stat(path.c_str(), &st) == 0) {
+            return S_ISDIR(st.st_mode);
+        }
+        return false;
+    }
+
+    int send_file(int sock, const std::string& path) {
+
+        FILE* fp = fopen(path.c_str(), "rb");
+        if (fp == nullptr) {
+            return -1;
+        }
+
+        fseek(fp, 0, SEEK_END);
+
+        long size = ftell(fp);
+        fseek(fp, 0, SEEK_SET);
+
+        return sendfile(sock, fileno(fp), nullptr, size);
+    }
+
+    int get_path_info(const std::string& path) {
+        struct stat st;
+        if (stat(path.c_str(), &st) == 0) {
+            if (S_ISDIR(st.st_mode)) {
+                return 0;
+            } else {
+                return 1;
+            }
+        }
+        return -1;
     }
 
     std::string code_to_desc(int code) {

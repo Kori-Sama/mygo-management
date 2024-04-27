@@ -44,6 +44,15 @@ namespace http {
         return response_str;
     }
 
+    std::string HttpResponse::to_string_without_body() {
+        std::string response_str;
+        response_str += status_line;
+        response_str += header;
+        response_str += blank;
+
+        return response_str;
+    }
+
     bool HttpRequest::parse(const std::string& request_str) {
         std::vector<std::string> lines;
         size_t pos = 0;
