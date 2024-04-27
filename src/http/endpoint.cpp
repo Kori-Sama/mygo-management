@@ -2,6 +2,7 @@
 #include "http_utils.h"
 #include "string_utils.h"
 
+
 namespace http {
     void Endpoint::handle() {
         std::string req;
@@ -12,7 +13,6 @@ namespace http {
         if (_request.parse(req) < 0) {
             return;
         }
-
 
         Context ctx(_request, _response);
         ctx.req.ip = _ip;
@@ -41,31 +41,81 @@ namespace http {
 
         auto path = Router::instance().route_static(ctx);
 
-        if (!path.empty()) {
-            handle_static(path);
+        if (path.empty()) {
+            return;
+        }
+        if (ctx.req.method != "GET") {
+            build_error_response(HttpCode::METHOD_NOT_ALLOWED);
+            return;
+        }
+        if (!handle_static(path)) {
+            build_error_response(HttpCode::NOT_FOUND);
         }
     }
 
-    bool Endpoint::handle_static(const std::string& path) {
-        int type = get_path_info(path);
+    bool Endpoint::handle_static(std::string path) {
+        // struct stat st;
+        // std::string p = path;
+        // if (stat(p.c_str(), &st) == 0) {
+        //     if (S_ISDIR(st.st_mode)) {
+        //         p += DEFAULT_PAGE;
+        //         stat(p.c_str(), &st);
+        //     }
+        // } else {
+        //     auto pos = p.rfind("/");
+        //     p = p.substr(0, pos) + DEFAULT_PAGE;
+        //     printf("%s\n", p.c_str());
+        //     if (stat(p.c_str(), &st) != 0) {
+        //         return false;
+        //     }
+        // }
+        // auto size = st.st_size;
+        // printf("size: %ld\n", size);
+        // _response.status_code = HttpCode::OK;
+        // auto pos = p.rfind(".");
+        // auto suffix = p.substr(pos);
+        // _response.header_kv["Content-Type"] = suffix_to_desc(suffix);
+        // _response.header_kv["Content-Length"] = std::to_string(size);
+        // _response.build();
+        // std::string response_str = _response.to_string_without_body();
+        // printf("response: %s\n", response_str.c_str());
+        // if (write_all(_sock, response_str) <= 0) {
+        // }
+        // if (send_file(_sock, p, size) <= 0) {
+
+        // }
+        // return true;
+
+        long size = 0;
+        int type = get_path_info(path, size);
         if (type == -1) {
-            return handle_static(DEFAULT_PAGE);
+            auto pos = path.rfind("/");
+            if (path.substr(pos) == DEFAULT_PAGE) {
+                return false;
+            }
+            path = path.substr(0, pos) + DEFAULT_PAGE;
+            return handle_static(path);
+            // type = get_path_info(path, size);
+            // if (type != 1) {
+            //     return false;
+            // }
         } else if (type == 0) {
             return handle_static(path + DEFAULT_PAGE);
-        } else if (type == 1) {
-            _response.status_code = HttpCode::OK;
-            auto suffix = utils::split(path, ".")[1];
-            _response.header_kv["Content-Type"] = suffix_to_desc(suffix);
-            _response.build();
-            std::string response_str = _response.to_string_without_body();
-            if (write_all(_sock, response_str) <= 0) {
-            }
-            if (send_file(_sock, path) <= 0) {
-
-            }
-            return true;
         }
-        return false;
+
+        _response.status_code = HttpCode::OK;
+        auto pos = path.rfind(".");
+        auto suffix = path.substr(pos);
+        _response.header_kv["Content-Type"] = suffix_to_desc(suffix);
+        _response.header_kv["Content-Length"] = std::to_string(size);
+        _response.build();
+        std::string response_str = _response.to_string_without_body();
+        if (write_all(_sock, response_str) <= 0) {
+        }
+        if (send_file(_sock, path, size) <= 0) {
+
+        }
+        return true;
     }
 
     void Endpoint::send_response() {
@@ -77,7 +127,7 @@ namespace http {
     }
 
     void Endpoint::build_error_response(HttpCode code) {
-        // process error
+
         _response.status_code = code;
         _response.header_kv["Content-Type"] = "text/html";
         _response.body = "<html><body><h1>" + std::to_string(code) + " " + code_to_desc(code) + "</h1></body></html>";

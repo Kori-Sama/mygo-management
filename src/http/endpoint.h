@@ -18,7 +18,7 @@ namespace http {
 
         void handle();
     private:
-        bool handle_static(const std::string& path);
+        bool handle_static(std::string path);
         void send_response();
         void build_error_response(HttpCode code);
 

@@ -11,7 +11,7 @@
 #define LOGIN_URL "/login"
 
 void logger_middleware(Context& ctx) {
-    std::cout << ctx.req.method << " " << ctx.req.url << " " << ctx.req.ip << ":" << ctx.req.port << std::endl;
+    std::cout << "[" << ctx.req.method << "]       " << ctx.req.url << "          " << ctx.req.ip << ":" << ctx.req.port << std::endl;
 }
 
 HandleFunc make_jwt_middleware(std::vector<std::string>&& exclude_urls) {

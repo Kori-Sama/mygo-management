@@ -1,6 +1,8 @@
 #include<sys/socket.h>
 #include<sys/stat.h>
 #include<sys/sendfile.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <unordered_map>
 #include "http_utils.h"
 
@@ -27,65 +29,28 @@ namespace http {
     }
 
     int write_all(int sock, const std::string& data) {
-        size_t size = data.size();
-        size_t pos = 0;
-        while (pos < size) {
-            ssize_t ret = send(sock, data.c_str() + pos, size - pos, 0);
-            if (ret < 0) {
-                return -1;
-            }
-            pos += ret;
-        }
-        return 1;
+        return send(sock, data.c_str(), data.size(), 0);
     }
 
-    char* read_file(const std::string& path) {
-        FILE* fp = fopen(path.c_str(), "rb");
-        if (fp == nullptr) {
-            return nullptr;
-        }
+    int send_file(int sock, const std::string& path, long size) {
+        int fd = open(path.c_str(), O_RDONLY);
 
-        fseek(fp, 0, SEEK_END);
-        long size = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-
-        char* buffer = new char[size + 1];
-        fread(buffer, 1, size, fp);
-        buffer[size] = '\0';
-
-        fclose(fp);
-        return buffer;
-    }
-
-    bool is_dir(const std::string& path) {
-        struct stat st;
-        if (stat(path.c_str(), &st) == 0) {
-            return S_ISDIR(st.st_mode);
-        }
-        return false;
-    }
-
-    int send_file(int sock, const std::string& path) {
-
-        FILE* fp = fopen(path.c_str(), "rb");
-        if (fp == nullptr) {
+        if (fd < 0) {
             return -1;
         }
 
-        fseek(fp, 0, SEEK_END);
-
-        long size = ftell(fp);
-        fseek(fp, 0, SEEK_SET);
-
-        return sendfile(sock, fileno(fp), nullptr, size);
+        int ret = sendfile(sock, fd, nullptr, size);
+        close(fd);
+        return ret;
     }
 
-    int get_path_info(const std::string& path) {
+    int get_path_info(const std::string& path, long& size) {
         struct stat st;
         if (stat(path.c_str(), &st) == 0) {
             if (S_ISDIR(st.st_mode)) {
                 return 0;
             } else {
+                size = st.st_size;
                 return 1;
             }
         }
@@ -117,7 +82,14 @@ namespace http {
                 {".css", "text/css"},
                 {".js", "application/x-javascript"},
                 {".jpg", "application/x-jpg"},
-                {".xml", "text/xml"}
+                {".xml", "text/xml"},
+                {".svg"," image/svg+xml"},
+                {".json", "application/json"},
+                {".txt", "text/plain"},
+                {".png", "image/png"},
+                {".gif", "image/gif"},
+                {".jpeg", "image/jpeg"},
+                {".ico", "image/x-icon"}
         };
         auto iter = suffix_to_desc.find(suffix);
         if (iter != suffix_to_desc.end()) {
