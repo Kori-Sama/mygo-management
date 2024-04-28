@@ -11,12 +11,6 @@
 #include "http_server.h"
 
 namespace http {
-    // void handle_request(int sock, std::string_view ip, int port) {
-    //     auto ep = std::make_unique<Endpoint>(sock, ip, port);
-    //     ep->handle();
-    //     close(sock);
-    // }
-
     HttpServer& HttpServer::instance() {
         static HttpServer server;
         return server;
@@ -45,13 +39,6 @@ namespace http {
             std::string client_ip = inet_ntoa(peer.sin_addr);
             int client_port = ntohs(peer.sin_port);
 
-            // ThreadPool::instance().add_task(std::bind(handle_request, sock, client_ip, client_port));
-            // ThreadPool::instance().add_task(
-            //     [sock, client_ip, client_port]() {
-            //         auto ep = std::make_unique<Endpoint>(sock, client_ip, client_port);
-            //         ep->handle();
-            //         close(sock);
-            //     });
             ThreadPool::instance().add_task(
                 [sock, client_ip, client_port]() {
                     Endpoint ep(sock, client_ip, client_port);

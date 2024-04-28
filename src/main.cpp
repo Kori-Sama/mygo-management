@@ -27,8 +27,8 @@ int main() {
 
     app->use_static("www");
 
-    app->route("GET", "/api/transactions", get_all_transactions);
-    app->route("GET", "/api/hello", hello);
+    app->route("GET", "/transactions", get_all_transactions);
+    app->route("GET", "/hello", hello);
 
 
     app->run(config.port);

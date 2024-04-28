@@ -23,46 +23,46 @@ namespace http {
             return;
         }
 
-        if (utils::starts_with(_request.uri, "/api")) {
-            auto handleFunc = Router::instance().match(_request.uri, _request.method);
-            if (handleFunc == nullptr) {
-                build_error_response(HttpCode::NOT_FOUND);
-                return;
-            }
-            handleFunc(ctx);
-
-            if (_response.status_code == HttpCode::OK) {
-                send_response();
-            } else {
-                build_error_response(_response.status_code);
-            }
-            return;
-        }
-
         auto path = Router::instance().route_static(ctx);
 
-        if (path.empty()) {
-            return;
+        /* Handle static file */
+        if (!path.empty()) {
+            if (ctx.req.method != "GET") {
+                build_error_response(HttpCode::METHOD_NOT_ALLOWED);
+                return;
+            }
+            if (handle_static(path)) {
+                return;
+            }
         }
-        if (ctx.req.method != "GET") {
-            build_error_response(HttpCode::METHOD_NOT_ALLOWED);
-            return;
-        }
-        if (!handle_static(path)) {
+
+        /* Handle API */
+        auto handleFunc = Router::instance().match(_request.uri, _request.method);
+        if (handleFunc == nullptr) {
             build_error_response(HttpCode::NOT_FOUND);
+            return;
         }
+        handleFunc(ctx);
+
+        if (_response.status_code == HttpCode::OK) {
+            send_response();
+        } else {
+            build_error_response(_response.status_code);
+        }
+        return;
     }
 
     bool Endpoint::handle_static(std::string path) {
         long size = 0;
         int type = get_path_info(path, size);
         if (type == -1) {
-            auto pos = path.rfind("/");
-            if (path.substr(pos) == DEFAULT_PAGE) {
-                return false;
-            }
-            path = path.substr(0, pos) + DEFAULT_PAGE;
-            return handle_static(path);
+            return false;
+            // auto pos = path.rfind("/");
+            // if (path.substr(pos) == DEFAULT_PAGE) {
+            //     return false;
+            // }
+            // path = path.substr(0, pos) + DEFAULT_PAGE;
+            // return handle_static(path);
         } else if (type == 0) {
             return handle_static(path + DEFAULT_PAGE);
         }
