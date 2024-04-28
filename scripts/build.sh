@@ -6,10 +6,10 @@ fi
 
 cd build
 
-if [ $1 = "debug" ]; then
+if [[ $1 = "debug" ]]; then
     echo "building in debug mode"
     complie_flag="-DCMAKE_BUILD_TYPE=Debug"
-elif [ $1 = "release" ]; then
+elif [[ $1 = "release" ]]; then
     echo "building in release mode"
     complie_flag="-DCMAKE_BUILD_TYPE=Release"
 else
@@ -38,9 +38,9 @@ use_ninja() {
     fi
 }
 
-if [ $2 = "make" ]; then
+if [[ $2 = "make" ]]; then
     use_make
-elif [ $2 = "ninja" ]; then
+elif [[ $2 = "ninja" ]]; then
     use_ninja
 else
     echo "no build system specified, defaulting to ninja"

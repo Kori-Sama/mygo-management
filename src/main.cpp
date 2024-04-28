@@ -25,7 +25,7 @@ int main() {
     // app->middleware(jwt_auth);
 
 
-    app->use_static("www");
+    // app->use_static("www");
 
     app->route("GET", "/transactions", get_all_transactions);
     app->route("GET", "/hello", hello);
