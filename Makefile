@@ -1,4 +1,9 @@
 # This Makefile is just a script runner, all scripts are in the scripts folder
+run:
+	@./bin/release/app
+
+run-d:
+	@./bin/debug/app
 
 build:
 	@./scripts/build.sh release
@@ -14,4 +19,4 @@ clear:
 	rm -rf ./bin
 	@echo "clear complete"
 
-.PHONY: build build-d test clear
+.PHONY: run run-d build build-d test clear
