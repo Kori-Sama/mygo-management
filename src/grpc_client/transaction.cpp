@@ -17,6 +17,9 @@ namespace grpc_client {
         if (!status.ok()) {
             printf("TransactionClient::get_all_transactions rpc failed\n");
         }
+
+        std::cout << "[GRPC] << Get all transactions" << std::endl;
+
         return transactions;
     }
 
@@ -35,6 +38,8 @@ namespace grpc_client {
         if (!status.ok()) {
             printf("TransactionClient::handle_transaction rpc failed\n");
         }
+
+        std::cout << "[GRPC] << Handle transaction" << std::endl;
         return response.transaction();
     }
 }

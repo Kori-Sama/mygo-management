@@ -14,22 +14,21 @@ int main() {
     Config config;
     config.load_env();
     ThreadPool::instance().init(config.thread_pool_size);
-    GrpcClient::instance().init(config.grpc_port);
+    GrpcClient::instance().init(config.grpc_ip, config.grpc_port);
 
     auto app = std::make_unique<KoriHttp>();
 
 
     app->middleware(logger_middleware);
     app->middleware(cors_middleware);
-    // auto jwt_auth = make_jwt_middleware({ "/login" });
-    // app->middleware(jwt_auth);
+    auto jwt_auth = make_jwt_middleware({ "/login" });
+    app->middleware(jwt_auth);
 
 
     // app->use_static("www");
 
     app->route("GET", "/transactions", get_all_transactions);
-    app->route("GET", "/hello", hello);
-
+    app->route("POST", "/transaction", handle_transactions);
 
     app->run(config.port);
 }

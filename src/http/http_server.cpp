@@ -23,11 +23,12 @@ namespace http {
 
     void HttpServer::run() {
         using namespace thread_pool;
-
         TcpServer::instance().init(_port);
         int listen_sock = TcpServer::instance().Sock();
 
         while (true) {
+            std::cout << "waiting for a request..." << std::endl;
+
             struct sockaddr_in peer;
             memset(&peer, 0, sizeof(peer));
             socklen_t len = sizeof(peer);
@@ -36,13 +37,16 @@ namespace http {
                 continue;
             }
 
+
             std::string client_ip = inet_ntoa(peer.sin_addr);
             int client_port = ntohs(peer.sin_port);
 
             ThreadPool::instance().add_task(
                 [sock, client_ip, client_port]() {
-                    Endpoint ep(sock, client_ip, client_port);
-                    ep.handle();
+                    // Endpoint ep(sock, client_ip, client_port);
+                    // ep.handle();
+                    auto ep = std::make_unique<Endpoint>(sock, client_ip, client_port);
+                    ep->handle();
                     close(sock);
                 });
         }

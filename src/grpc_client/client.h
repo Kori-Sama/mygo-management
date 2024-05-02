@@ -7,9 +7,9 @@ namespace grpc_client {
     private:
         std::string _port;
     public:
-        void init(int port = 50051) {
+        void init(const std::string& ip, int port = 50051) {
             _port = std::to_string(port);
-            auto channel = grpc::CreateChannel("localhost:" + _port, grpc::InsecureChannelCredentials());
+            auto channel = grpc::CreateChannel(ip + ":" + _port, grpc::InsecureChannelCredentials());
             _transaction_client = TransactionClient(channel);
         }
 

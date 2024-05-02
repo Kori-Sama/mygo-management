@@ -1,7 +1,7 @@
 #include "tool.h"
 #include "cJSON.h"
 
-cJSON* _stringify_transaction(const std::vector<TransactionMessage>& data) {
+static cJSON* _stringify_transaction(const std::vector<TransactionMessage>& data) {
     cJSON* root = cJSON_CreateArray();
     for (const auto& t : data) {
         cJSON* item = cJSON_CreateObject();
@@ -16,7 +16,7 @@ cJSON* _stringify_transaction(const std::vector<TransactionMessage>& data) {
     return root;
 }
 
-cJSON* _stringify_transaction(const TransactionMessage& data) {
+static cJSON* _stringify_transaction(const TransactionMessage& data) {
     cJSON* root = cJSON_CreateObject();
     cJSON_AddNumberToObject(root, "id", data.id());
     cJSON_AddStringToObject(root, "title", data.title().c_str());

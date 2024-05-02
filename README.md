@@ -7,6 +7,7 @@ This server cannot run independently, it is a service in a distributed system, a
 
 - gRPC (for remote calls to the main server)
 - cJSON (for serializing data to JSON)
+- googletest (unit test framework)
 
 ### Links to Other Parts of the Project
 

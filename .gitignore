@@ -1,5 +1,3 @@
 bin
 build
-third_party/gRPC/bin
-third_party/gRPC/include
-third_party/gRPC/lib
+third_party/grpc/lib/*.a

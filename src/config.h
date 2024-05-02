@@ -6,18 +6,22 @@
 
 struct Config {
     int port = 9090;
+    std::string grpc_ip = "localhost";
     int grpc_port = 50051;
     int thread_pool_size = 4;
     std::string static_root = "www";
 
     void load_env() {
         auto env_port = getenv("PORT");
+        auto env_grpc_ip = getenv("GRPC_IP");
         auto env_grpc_port = getenv("GRPC_PORT");
         auto env_thread_pool_size = getenv("THREAD_POOL_SIZE");
         auto env_www_root = getenv("STATIC_ROOT");
 
         if (env_port != NULL)
             port = std::stoi(env_port);
+        if (env_grpc_ip != NULL)
+            grpc_ip = std::string(env_grpc_ip);
         if (env_grpc_port != NULL)
             grpc_port = std::stoi(env_grpc_port);
         if (env_thread_pool_size != NULL)

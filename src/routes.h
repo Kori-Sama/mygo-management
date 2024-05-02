@@ -32,9 +32,14 @@ void get_all_transactions(Context& ctx) {
         .send(stringify_transaction(transactions).c_str());
 }
 
-void hello(Context& ctx) {
-    auto name = ctx.query("name");
-    ctx.code(HttpCode::OK).html(std::string("</h1>Hello " + name + "</h1>").c_str());
+void handle_transactions(Context& ctx) {
+    auto id = ctx.query("id");
+    auto action = ctx.query("action");
+
+    auto t = grpc_client::GrpcClient::instance().handle_transaction(std::stoi(id), get_action(action));
+    ctx.code(HttpCode::OK)
+        .send(stringify_transaction(t).c_str());
 }
+
 
 #endif // __ROUTES_H
