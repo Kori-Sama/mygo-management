@@ -1,7 +1,6 @@
-list(APPEND CMAKE_PREFIX_PATH "/home/$ENV{USER}/.local/bin")
-
 find_package(Threads REQUIRED)
 option(protobuf_MODULE_COMPATIBLE TRUE)
+
 find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${Protobuf_VERSION}")
 
@@ -13,7 +12,6 @@ else()
   set(_PROTOBUF_PROTOC $<TARGET_FILE:protobuf::protoc>)
 endif()
 
-
 find_package(gRPC CONFIG REQUIRED)
 message(STATUS "Using gRPC ${gRPC_VERSION}")
 
@@ -24,12 +22,13 @@ else()
   set(_GRPC_CPP_PLUGIN_EXECUTABLE $<TARGET_FILE:gRPC::grpc_cpp_plugin>)
 endif()
 
+
 set(pbs "transaction")
 
 foreach(pb ${pbs})
   message(STATUS "Generating ${pb}")
 
-  get_filename_component(hw_proto "./protos/${pb}.proto" ABSOLUTE)
+  get_filename_component(hw_proto "${PROJECT_ROOT}/protos/${pb}.proto" ABSOLUTE)
   get_filename_component(hw_proto_path "${hw_proto}" PATH)
 
   set(hw_proto_srcs "${CMAKE_CURRENT_BINARY_DIR}/${pb}.pb.cc")
@@ -46,8 +45,6 @@ foreach(pb ${pbs})
           "${hw_proto}"
         DEPENDS "${hw_proto}")
 endforeach()
-
-include_directories("/home/$ENV{USER}/.local/include" "${CMAKE_CURRENT_BINARY_DIR}")
 
 add_library(hw_grpc_proto
   ${hw_grpc_srcs}

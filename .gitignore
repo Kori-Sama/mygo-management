@@ -1,3 +1,4 @@
 bin
 build
 third_party/grpc/lib/*.a
+third_party/grpc/lib/*.so
