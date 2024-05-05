@@ -5,12 +5,23 @@
 #include <bits/basic_string.h>
 
 struct Config {
+    // The port to listen
     int port = 9090;
+
+    // The IP address of the gRPC server
     std::string grpc_ip = "localhost";
+
+    // The port of the gRPC server
     int grpc_port = 50051;
+
+    // The size of the thread pool
     int thread_pool_size = 4;
+
+    // The root path of the static files
     std::string static_root = "www";
 
+    /// @brief Load the environment variables
+    /// @note The environment variables will be set a default value if not found
     void load_env() {
         auto env_port = getenv("PORT");
         auto env_grpc_ip = getenv("GRPC_IP");

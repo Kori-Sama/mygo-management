@@ -42,13 +42,33 @@ std::string stringify_transaction(const TransactionMessage transaction) {
     return json_string;
 }
 
-std::unordered_map<std::string, std::string> json_object_to_map(const char* json) {
+std::optional<std::unordered_map<std::string, std::string>> json_object_to_map(const char* json) {
     std::unordered_map<std::string, std::string> map;
     cJSON* root = cJSON_Parse(json);
-    cJSON* item = root->child;
+    if (root == nullptr) {
+        cJSON_Delete(root);
+        return std::nullopt;
+    }
+    auto item = root->child;
+    if (item == nullptr) {
+        cJSON_Delete(root);
+        return std::nullopt;
+    }
     while (item) {
-        map[item->string] = item->valuestring;
-        item = item->next;
+        switch (item->type) {
+        case cJSON_String:
+            map[item->string] = item->valuestring;
+            item = item->next;
+            break;
+        case cJSON_Number:
+            map[item->string] = std::to_string(item->valueint);
+            item = item->next;
+            break;
+        default:
+            cJSON_Delete(root);
+            return std::nullopt;
+            break;
+        }
     }
     cJSON_Delete(root);
     return map;

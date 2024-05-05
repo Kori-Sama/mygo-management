@@ -3,14 +3,13 @@
 #include "routes.h"
 #include "middleware.h"
 #include "thread_pool.h"
-#include "http/kori.h"
+#include "http/kori_http.h"
 #include "grpc_client/client.h"
 using namespace thread_pool;
 using namespace grpc_client;
 using namespace http;
 
 int main() {
-
     Config config;
     config.load_env();
     ThreadPool::instance().init(config.thread_pool_size);
@@ -18,12 +17,9 @@ int main() {
 
     auto app = std::make_unique<KoriHttp>();
 
-
     app->middleware(logger_middleware);
     app->middleware(cors_middleware);
-    auto jwt_auth = make_jwt_middleware({ "/login" });
-    app->middleware(jwt_auth);
-
+    app->middleware(make_jwt_middleware({ "/login" }));
 
     // app->use_static("www");
 
