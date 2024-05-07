@@ -14,8 +14,7 @@ namespace http {
         void run();
 
     private:
-        HttpServer()
-        {}
+        HttpServer() {}
 
         HttpServer(const HttpServer&) = delete;
         HttpServer& operator=(const HttpServer&) = delete;

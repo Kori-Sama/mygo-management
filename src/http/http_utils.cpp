@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include "http_utils.h"
 
-
 #define BUF_SIZE 1024
 
 namespace http {
@@ -80,8 +79,7 @@ namespace http {
         }
     }
 
-    std::string suffix_to_desc(const std::string& suffix)
-    {
+    std::string suffix_to_desc(const std::string& suffix) {
         static std::unordered_map<std::string, std::string> suffix_to_desc = {
                 {".html", "text/html"},
                 {".css", "text/css"},

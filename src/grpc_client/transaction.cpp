@@ -1,8 +1,7 @@
 #include "transaction.h"
 
 namespace grpc_client {
-    std::vector<TransactionMessage> TransactionClient::get_all_transactions()
-    {
+    std::vector<TransactionMessage> TransactionClient::get_all_transactions() {
         GetAllTransactionsRequest request;
         ClientContext context;
         auto reader = _stub->GetAllTransactions(&context, request);
@@ -23,8 +22,7 @@ namespace grpc_client {
         return transactions;
     }
 
-    TransactionMessage TransactionClient::handle_transaction(int id, grpc::TransactionRequest_Action action)
-    {
+    TransactionMessage TransactionClient::handle_transaction(int id, grpc::TransactionRequest_Action action) {
         ClientContext context;
 
         TransactionRequest request;
