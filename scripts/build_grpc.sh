@@ -11,16 +11,16 @@ echo "-- cloning grpc source code from github"
 git clone --recurse-submodules -b v1.62.0 --depth 1 --shallow-submodules https://github.com/grpc/grpc
 
 echo "-- download finished, begin to build"
-cd grpc
+cd grpc || exit
 mkdir -p cmake/build
-pushd cmake/build
+pushd cmake/build || exit
 cmake -DgRPC_INSTALL=ON \
     -DgRPC_BUILD_TESTS=OFF \
     -DCMAKE_INSTALL_PREFIX=$MY_INSTALL_DIR \
     ../..
 make -j 4
 make install
-popd
+popd || exit
 
 echo "-- build complete, begin to delete source directory"
 cd ..

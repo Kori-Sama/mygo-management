@@ -4,7 +4,7 @@ if [ ! -d "build" ]; then
   mkdir build
 fi
 
-cd build
+cd build || exit
 
 if [[ $1 = "debug" ]]; then
     echo "building in debug mode"

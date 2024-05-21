@@ -10,7 +10,7 @@ namespace http {
             return;
         }
 
-        if (_request.parse(req) < 0) {
+        if (_request.parse(req) == 0) {
             return;
         }
 
@@ -75,9 +75,10 @@ namespace http {
         _response.build();
         std::string response_str = _response.to_string_without_body();
         if (write_all(_sock, response_str) <= 0) {
+            return false;
         }
         if (send_file(_sock, path, size) <= 0) {
-
+            return false;
         }
         return true;
     }

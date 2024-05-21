@@ -1,6 +1,7 @@
 #include "kori_http.h"
 #include "router.h"
 #include "http_server.h"
+#include "assert.h"
 
 namespace http {
     void KoriHttp::run(int port) {
@@ -22,6 +23,7 @@ namespace http {
     }
 
     void KoriHttp::print_logo() {
+        ASSERT(1 != 1, "Test");
         auto logo = R"(
   _______ ____   _____ ______   _   _           _____ _    _ _____ 
  |__   __/ __ \ / ____|  ____| | \ | |   /\    / ____| |  | |_   _|

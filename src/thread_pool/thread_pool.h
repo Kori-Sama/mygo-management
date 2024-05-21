@@ -49,7 +49,7 @@ namespace thread_pool {
         /// @param ...args The arguments of the task
         /// @return The future of the task 
         template<typename F, typename... Args>
-        auto submit(F&& f, Args&&... args) -> std::future<decltype(f(args...))> {
+        auto submit(F&& f, Args&&... args) {
             auto task =
                 std::make_shared<std::packaged_task<decltype(f(args...))()>>
                 (std::bind(std::forward<F>(f), std::forward<Args>(args)...));
@@ -57,15 +57,8 @@ namespace thread_pool {
             auto res = task->get_future();
             add_task([task]() { (*task)(); });
             return res;
-
-            // auto task =
-            //     std::make_unique<std::packaged_task<decltype(f(args...))()>>
-            //     (std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-
-            // auto res = task->get_future();
-            // add_task([task=std::move(task)]() { (*task)(); });
-            // return res;
         }
+
     private:
         ThreadPool() :_is_stop(false) {};
 
