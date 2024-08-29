@@ -1,4 +1,3 @@
-# 这是我的C++课程设计, 仅供学习参考
 [[中文版]](https://github.com/Kori-Sama/mygo-management/blob/main/README-CN.md)
 ## A Distributed HTTP Server Written in C++ 
 
